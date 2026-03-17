@@ -88,3 +88,30 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error(err);
         });
 });
+
+document.getElementsByClassName("srcBtn")[0].addEventListener("click", () => {
+
+    const idProd = document.getElementsByClassName("IDinput")[0]
+    const id =  parseInt(idProd.value)
+
+    fetch(`http://localhost:3000/product/${id}`)
+        .then((data) => {
+            if(data.ok){
+                return data.json();
+            }
+            throw (
+                alert(data.statusText + "\nProvavelmente, esse livro não existe!!") 
+            );
+        })
+        .then((data) => {
+            console.log(data);
+            const books = document.querySelector('.books');
+            books.innerHTML = "";
+
+            books.appendChild(newBook(data));
+            
+        })
+        .catch((err) => { console.log(`Erro  : ${err}`)})
+
+
+});
