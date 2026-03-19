@@ -104,8 +104,8 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error(err);
         });
 });
-
-document.getElementsByClassName("srcBtn")[0].addEventListener("click", () => {
+    
+function handleSearchProductByID() {
 
     const idProd = document.getElementsByClassName("IDinput")[0]
     const id = parseInt(idProd.value)
@@ -139,4 +139,8 @@ document.getElementsByClassName("srcBtn")[0].addEventListener("click", () => {
         .catch((err) => {
             console.log(`Erro: ${err.message}`);
         });
-});
+};
+
+document.getElementsByClassName("srcBtn")[0].addEventListener("click", handleSearchProductByID)
+document.getElementsByClassName("IDinput")[0].addEventListener("keydown", (e) => { if(e.key === "Enter") handleSearchProductByID()})
+    
