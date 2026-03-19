@@ -35,6 +35,22 @@ function newBook(book) {
     return div;
 }
 
+function bookModal(book) {
+    const div = document.createElement('div');
+    div.innerHTML = `
+        <div style="display:flex; gap:20px; align-items:center;">
+            <img src="${book.photo}" style="width:120px; border-radius:8px;" />
+            <div>
+                <h3><strong>${book.name}</strong></h3>
+                <p>${book.author}</p>
+                <p><b>R$${book.price.toFixed(2)}</b></p>
+                <p>Estoque: ${book.quantity}</p>
+            </div>
+        </div>
+    `;
+    return div;
+}
+
 function calculateShipping(id, cep) {
     fetch('http://localhost:3000/shipping/' + cep)
         .then((data) => {
@@ -92,26 +108,35 @@ document.addEventListener('DOMContentLoaded', function () {
 document.getElementsByClassName("srcBtn")[0].addEventListener("click", () => {
 
     const idProd = document.getElementsByClassName("IDinput")[0]
-    const id =  parseInt(idProd.value)
+    const id = parseInt(idProd.value)
 
     fetch(`http://localhost:3000/product/${id}`)
-        .then((data) => {
-            if(data.ok){
-                return data.json();
+        .then((response) => {
+
+            if (!response.ok) {
+                if (response.status === 500) {
+                    swal("Erro:","Livro não encontrado!");
+                } else {
+                    swal("Erro ao buscar o livro.");
+                }
+                throw new Error("Erro na requisição");
             }
-            throw (
-                alert(data.statusText + "\nProvavelmente, esse livro não existe!!") 
-            );
+
+            return response.json();
         })
         .then((data) => {
-            console.log(data);
-            const books = document.querySelector('.books');
-            books.innerHTML = "";
+            const bookHTML = bookModal(data).outerHTML;
 
-            books.appendChild(newBook(data));
-            
+            swal({
+                content: {
+                    element: "div",
+                    attributes: {
+                        innerHTML: bookHTML
+                    }
+                }
+            });
         })
-        .catch((err) => { console.log(`Erro  : ${err}`)})
-
-
+        .catch((err) => {
+            console.log(`Erro: ${err.message}`);
+        });
 });

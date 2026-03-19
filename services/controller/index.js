@@ -52,7 +52,7 @@ app.get('/product/:id', (req, res, next) => {
         // com o microsserviço, retorna para o navegador.
         if (err) {
             console.error(err);
-            res.status(500).send({ error: 'something failed :(' });
+            res.status(500).send({ error: 'Livro não encontrado :(' });
         } else {
             // Caso contrário, retorna resultado do
             // microsserviço (um arquivo JSON) com os dados
